@@ -1,6 +1,5 @@
 package io.github.msouter.lodgebook.models;
 
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -10,8 +9,6 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
 import com.google.firebase.auth.UserProfileChangeRequest;
-
-import java.util.List;
 
 import io.github.msouter.lodgebook.network.Authentication;
 
@@ -35,8 +32,14 @@ public class User {
     }
 
     public User(FirebaseUser u) {
-        this.displayName = u.getDisplayName();
         this.emailAddress = u.getEmail();
+
+        if (u.getDisplayName()==null) {
+            setDisplayName(emailAddress.substring(0, emailAddress.indexOf("@")));
+        } else {
+            this.displayName = u.getDisplayName();
+        }
+
         if (u.getPhotoUrl()==null) {
             this.photoUrl = "";
         } else {
