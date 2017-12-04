@@ -2,6 +2,7 @@ package io.github.msouter.lodgebook.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -11,16 +12,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+import com.squareup.picasso.Picasso;
 
 import io.github.msouter.lodgebook.R;
 import io.github.msouter.lodgebook.models.User;
 import io.github.msouter.lodgebook.network.Authentication;
 import io.github.msouter.lodgebook.network.Database;
 import io.github.msouter.lodgebook.network.UpdateCallback;
+import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 public class MainActivity extends AppCompatActivity {
     @Override
@@ -106,15 +110,38 @@ public class MainActivity extends AppCompatActivity {
         Database.getUser(new UpdateCallback() {
             @Override
             public void updateData(DataSnapshot data) {
-                    User myUser = data.getValue(User.class);
-                    TextView tvDisplayname = findViewById(R.id.tv_displayname);
-                    TextView tvEmail = findViewById(R.id.tv_email);
-                    TextView tvPhoto = findViewById(R.id.tv_photourl);
-                    tvDisplayname.setText(myUser.getDisplayName());
-                    tvEmail.setText(myUser.getEmailAddress());
-                    tvPhoto.setText("");
+                refreshData(data);
             }
         });
+    }
+
+    private void refreshData(DataSnapshot data) {
+        User myUser = data.getValue(User.class);
+        TextView tvDisplayname = findViewById(R.id.tv_displayname);
+        TextView tvEmail = findViewById(R.id.tv_email);
+        tvDisplayname.setText(myUser.getDisplayName());
+        tvEmail.setText(myUser.getEmailAddress());
+
+        LinearLayout llPhotoLayout = findViewById(R.id.linear_layout_userpic_container);
+        ImageView tvPhoto = findViewById(R.id.iv_userpic);
+        if (myUser.getPhotoUrl().equals("")) {
+            Picasso.with(this)
+                    .load(R.drawable.com_facebook_profile_picture_blank_portrait)
+                    .placeholder(R.drawable.com_facebook_profile_picture_blank_portrait)
+                    .resize(llPhotoLayout.getWidth() / 2, llPhotoLayout.getWidth() / 2)
+                    .transform(new RoundedCornersTransformation(40, 5))
+                    .centerCrop()
+                    .into(tvPhoto);
+        } else {
+            Picasso.with(this)
+                    .load(myUser.getPhotoUrl())
+                    .placeholder(R.drawable.com_facebook_profile_picture_blank_portrait)
+                    .resize(llPhotoLayout.getWidth() / 2, llPhotoLayout.getWidth() / 2)
+                    .transform(new RoundedCornersTransformation(40, 5))
+                    .centerCrop()
+                    .into(tvPhoto);
+        }
+
     }
 
     private void loadLogin() {

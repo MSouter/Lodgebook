@@ -1,5 +1,6 @@
 package io.github.msouter.lodgebook.network;
 
+import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -30,5 +31,6 @@ public class Authentication {
 
     public static void signOutFirebase() {
         sFirebaseAuth.signOut();
+        LoginManager.getInstance().logOut();
     }
 }

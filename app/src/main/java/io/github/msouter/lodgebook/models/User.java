@@ -6,8 +6,12 @@ import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.auth.UserProfileChangeRequest;
+
+import java.util.List;
 
 import io.github.msouter.lodgebook.network.Authentication;
 
@@ -24,7 +28,7 @@ public class User {
 
     private String displayName;
     private String emailAddress;
-    private Uri photoUrl;
+    private String photoUrl;
 
     public User() {
         // Default Constructor required for calls to DataSnapshot.getValue(User.class)
@@ -33,7 +37,16 @@ public class User {
     public User(FirebaseUser u) {
         this.displayName = u.getDisplayName();
         this.emailAddress = u.getEmail();
-        this.photoUrl = u.getPhotoUrl();
+        if (u.getPhotoUrl()==null) {
+            this.photoUrl = "";
+        } else {
+            this.photoUrl = u.getPhotoUrl().toString();
+            for (UserInfo info : u.getProviderData()) {
+                if (info.getProviderId().equals(FacebookAuthProvider.PROVIDER_ID)) {
+                    this.photoUrl = "https://graph.facebook.com/" + info.getUid() + "/picture?type=large";
+                }
+            }
+        }
     }
 
     public String getDisplayName() {
@@ -44,7 +57,7 @@ public class User {
         return this.emailAddress;
     }
 
-    public Uri getPhotoUrl() {
+    public String getPhotoUrl() {
         return this.photoUrl;
     }
 
