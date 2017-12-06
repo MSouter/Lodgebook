@@ -6,11 +6,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 import io.github.msouter.lodgebook.R;
 import io.github.msouter.lodgebook.models.User;
@@ -69,6 +75,34 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void updateData(DataSnapshot data) {
                 refreshData(data);
+            }
+        });
+
+        final ArrayList<String> lodgeList = new ArrayList<>();
+        lodgeList.add(getString(R.string.spinner_init));
+
+        final Spinner lodgeSpin = findViewById(R.id.sp_lodges);
+        final ArrayAdapter<String> aa = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, lodgeList);
+        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        lodgeSpin.setAdapter(aa);
+
+        Database.getLodges(new UpdateCallback() {
+            @Override
+            public void updateData(DataSnapshot data) {
+                aa.clear();
+                aa.add(getString(R.string.spinner_init));
+                for (DataSnapshot child : data.getChildren()) {
+                    aa.add(child.getKey());
+                }
+                aa.notifyDataSetChanged();
+            }
+        });
+
+        Button addLodge = findViewById(R.id.btn_add_lodge);
+        addLodge.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Database.setLodge();
             }
         });
     }

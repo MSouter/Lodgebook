@@ -20,6 +20,11 @@
 
     <string name="action_logout">Logout</string>
 
-    <!-- String Resources for Prompts -->
-    <string name="prompt_enter_name">Please enter desired display name...</string>
+    <!-- String Resources for Activities -->
+    <string name="spinner_init">Please select a lodge...</string>
+    <string name="add_lodge_button">Create A New Lodge!</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

@@ -10,6 +10,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
+import java.util.ArrayList;
+
 import io.github.msouter.lodgebook.network.Authentication;
 
 /**
@@ -35,7 +37,7 @@ public class User {
         this.emailAddress = u.getEmail();
 
         if (u.getDisplayName()==null) {
-            setDisplayName(emailAddress.substring(0, emailAddress.indexOf("@")));
+            changeDisplayName(emailAddress.substring(0, emailAddress.indexOf("@")));
         } else {
             this.displayName = u.getDisplayName();
         }
@@ -64,7 +66,7 @@ public class User {
         return this.photoUrl;
     }
 
-    public void setDisplayName(String name) {
+    public void changeDisplayName(String name) {
         this.displayName = name;
 
 

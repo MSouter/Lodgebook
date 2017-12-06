@@ -43,6 +43,26 @@ public class Database {
         sDatabase.child("users").child(Authentication.getFirebaseUser().getUid()).setValue(user);
     }
 
+    public static void setLodge() {
+        sDatabase.child("lodges").child("lists").child(Authentication.getFirebaseUser().getUid()).push().setValue(true);
+    }
+
+    public static void getLodges(final UpdateCallback updateCallback) {
+        valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                updateCallback.updateData(dataSnapshot);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+        sMyRef = sDatabase.child("lodges").child("lists").child(Authentication.getFirebaseUser().getUid());
+        sMyRef.addValueEventListener(valueEventListener);
+    }
+
     public static void clearListeners() {
         if (sMyRef!=null && valueEventListener!=null) {
             sMyRef.removeEventListener(valueEventListener);

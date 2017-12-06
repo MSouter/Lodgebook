@@ -11,9 +11,9 @@ import java.util.ArrayList;
 
 public class Container {
     private String mName;
-    private ArrayList<Resource> mContents;
+    private ArrayList<String> mContents;
 
-    public Container(String name, ArrayList<Resource> contents) {
+    public Container(String name, ArrayList<String> contents) {
         this.mName = name;
         this.mContents = contents;
     }
@@ -22,7 +22,7 @@ public class Container {
         return mName;
     }
 
-    public ArrayList<Resource> getContents() {
+    public ArrayList<String> getContents() {
         return mContents;
     }
 }
