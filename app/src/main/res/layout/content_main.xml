@@ -65,6 +65,17 @@
             android:layout_height="wrap_content"
             android:textAlignment="center" />
 
+        <Spinner
+            android:id="@+id/sp_lodges"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btn_add_lodge"
+            android:text="@string/add_lodge_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
