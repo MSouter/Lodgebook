@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.github.msouter.lodgebook.R;
 import io.github.msouter.lodgebook.ui.main.MainActivity;
 
@@ -37,7 +39,16 @@ public class RegisterFragment extends Fragment implements RegisterContract.View 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_register, container, false);
+        View view = inflater.inflate(R.layout.fragment_register, container, false);
+        ButterKnife.bind(this, view);
+
+        return view;
+    }
+
+    @OnClick(R.id.btn_register)
+    public void register() {
+        presenter.createAccount(etEmail.getText().toString().trim(),
+                etPassword.getText().toString().trim());
     }
 
     @Override

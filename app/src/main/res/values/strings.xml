@@ -7,6 +7,7 @@
     <string name="email_hint">E-Mail Address</string>
     <string name="password_hint">Password</string>
     <string name="login_button_label">Login</string>
+    <string name="register_button_label">Register</string>
     <string name="register_account">Register A New Account</string>
     <string name="login_error_title">Login Error</string>
     <string name="register_error_title">Registration Error</string>

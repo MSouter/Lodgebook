@@ -26,6 +26,8 @@ public class RegisterPresenter implements RegisterContract.Presenter {
     @Override
     public void createAccount(String email, String password) {
         if (password.isEmpty() || email.isEmpty()) {
+            String message = "E-Mail/Password must not be blank!";
+            mRegisterView.displayMessage(message);
             return;
         }
         Authentication.getFirebaseInstance().createUserWithEmailAndPassword(email, password)

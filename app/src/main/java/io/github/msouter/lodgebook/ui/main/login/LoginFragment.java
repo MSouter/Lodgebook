@@ -20,8 +20,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.github.msouter.lodgebook.R;
-import io.github.msouter.lodgebook.network.Authentication;
 import io.github.msouter.lodgebook.ui.main.MainActivity;
+import io.github.msouter.lodgebook.ui.main.register.RegisterFragment;
 
 import static android.content.ContentValues.TAG;
 
@@ -74,6 +74,15 @@ public class LoginFragment extends Fragment implements LoginContract.View {
     public void login() {
         presenter.loginWithCredentials(etEmail.getText().toString().trim(),
                 etPassword.getText().toString().trim());
+    }
+
+    @OnClick(R.id.btn_register)
+    public void register() {
+        RegisterFragment fragment = new RegisterFragment();
+        getFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     public void initFacebookButton() {
