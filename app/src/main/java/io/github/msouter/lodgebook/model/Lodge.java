@@ -26,8 +26,8 @@ public class Lodge {
      */
     public Lodge(String newName, String u) {
         this.name = newName;
-        this.description = " "; // Left blank initially
-        this.photoUrl = " ";
+        this.description = ""; // Left blank initially
+        this.photoUrl = "";
         this.members = new HashMap<>();
         this.members.put(u, true);
     }

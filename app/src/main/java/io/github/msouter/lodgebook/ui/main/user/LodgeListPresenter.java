@@ -18,12 +18,16 @@ public class LodgeListPresenter {
 
     void onBindRepositoryAtPosition(int position, LodgeListAdapter.LodgeViewHolder holder) {
         holder.setLodgeName(mData.get(position).getName());
-        holder.setLodgeCount(Integer.toString(mData.get(position).getMembers().size()));
+        holder.setLodgeCount(Integer.toString(mData.get(position).getMembers().size()) + " Members");
         holder.setLodgePic(mData.get(position).getPhotoUrl());
     }
 
     int getRepositoryCount() {
         return mData.size();
+    }
+
+    public void changeData(ArrayList<Lodge> newData) {
+        mData = newData;
     }
 
 }

@@ -11,7 +11,7 @@ public interface UserContract {
     interface View {
         void updateUser(String name, String email, String photo);
 
-        void updateLodgeList(ArrayList<String> lodges);
+        void updateLodgeList();
 
         void viewLodge(String lodgeId);
 
@@ -19,13 +19,13 @@ public interface UserContract {
     }
 
     interface Presenter {
-        void startListeners();
+        void startListeners(LodgeListPresenter lodgeListPresenter);
 
         void stopListeners();
 
         void addLodge(String lodgeName);
 
-        void viewLodge(String lodgeName);
+        void viewLodge(int position);
 
         void signOut();
     }

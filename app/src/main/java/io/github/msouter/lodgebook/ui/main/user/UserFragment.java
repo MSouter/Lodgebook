@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,15 +20,12 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnItemSelected;
 import io.github.msouter.lodgebook.R;
 import io.github.msouter.lodgebook.utils.GlideApp;
 
@@ -45,7 +44,7 @@ public class UserFragment extends Fragment implements UserContract.View {
     @BindView(R.id.tv_displayname) TextView tvDisplayName;
     @BindView(R.id.tv_email) TextView tvEMail;
     @BindView(R.id.iv_userpic) ImageView ivUserpic;
-    @BindView(R.id.sp_lodges) Spinner spLodges;
+    @BindView(R.id.recycler_view_lodges) RecyclerView recyclerViewLodges;
     @BindView(R.id.prog_loading_user) ProgressBar progLoadingUser;
 
     public UserFragment() {
@@ -70,13 +69,17 @@ public class UserFragment extends Fragment implements UserContract.View {
         View view = inflater.inflate(R.layout.fragment_user, container, false);
         ButterKnife.bind(this, view);
 
+
+        recyclerViewLodges.setHasFixedSize(true);
+        recyclerViewLodges.setLayoutManager(new LinearLayoutManager(getContext(),
+                LinearLayoutManager.HORIZONTAL, false));
+
         return view;
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
         try {
             mCallbackUserAction = (UserActionListener) context;
         } catch (ClassCastException e) {
@@ -105,7 +108,10 @@ public class UserFragment extends Fragment implements UserContract.View {
     @Override
     public void onResume() {
         super.onResume();
-        presenter.startListeners();
+        LodgeListPresenter lodgeListPresenter = new LodgeListPresenter(null);
+        presenter.startListeners(lodgeListPresenter);
+        LodgeListAdapter adapter = new LodgeListAdapter(lodgeListPresenter);
+        recyclerViewLodges.setAdapter(adapter);
     }
 
     @Override
@@ -126,10 +132,8 @@ public class UserFragment extends Fragment implements UserContract.View {
     }
 
     @Override
-    public void updateLodgeList(ArrayList<String> lodges) {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, lodges);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spLodges.setAdapter(adapter);
+    public void updateLodgeList() {
+        recyclerViewLodges.getAdapter().notifyDataSetChanged();
     }
 
     @Override
@@ -144,11 +148,6 @@ public class UserFragment extends Fragment implements UserContract.View {
         } else {
             progLoadingUser.setVisibility(View.GONE);
         }
-    }
-
-    @OnItemSelected(R.id.sp_lodges)
-    void lodgeSelected(Spinner spinner, int position) {
-
     }
 
     @SuppressLint("InflateParams")

@@ -25,9 +25,11 @@ import io.github.msouter.lodgebook.network.RemoteDB;
 
 public class UserPresenter implements UserContract.Presenter {
     private final UserContract.View mUserView;
+    private LodgeListPresenter mLodgeListPresenter;
 
     private User mUser;
-    private HashMap<String, String> mLodgeList;
+    private ArrayList<Lodge> mLodges;
+    private ArrayList<String> mLodgeKeys;
     private DatabaseReference mListReference;
     private ChildEventListener mListListener;
 
@@ -37,7 +39,10 @@ public class UserPresenter implements UserContract.Presenter {
     }
 
     @Override
-    public void startListeners() {
+    public void startListeners(LodgeListPresenter lodgeListPresenter) {
+        this.mLodgeListPresenter = lodgeListPresenter;
+        mLodges = new ArrayList<>();
+        mLodgeListPresenter.changeData(mLodges);
         mUserView.toggleProgressBar();
         RemoteDB.getReferenceFor(mUser, Authentication.getFirebaseUser().getUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -112,8 +117,8 @@ public class UserPresenter implements UserContract.Presenter {
     }
 
     @Override
-    public void viewLodge(String lodgeName) {
-
+    public void viewLodge(int position) {
+        mUserView.viewLodge(mLodgeKeys.get(position));
     }
 
     @Override
@@ -155,7 +160,10 @@ public class UserPresenter implements UserContract.Presenter {
     }
 
     private void updateLodgeList() {
-        mLodgeList = new HashMap<>();
+        mLodges = new ArrayList<>();
+        mLodgeListPresenter.changeData(mLodges);
+        mUserView.updateLodgeList();
+        mLodgeKeys = new ArrayList<>();
         Lodge pathFinder = new Lodge();
 
         HashMap<String, Boolean> lodges = mUser.getLodges();
@@ -168,8 +176,8 @@ public class UserPresenter implements UserContract.Presenter {
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            String lodgeName = dataSnapshot.child("name").getValue(String.class);
-                            mLodgeList.put(thisKey, lodgeName);
+                            mLodges.add(dataSnapshot.getValue(Lodge.class));
+                            mLodgeKeys.add(thisKey);
                             sendUpdatedList();
                         }
 
@@ -182,8 +190,7 @@ public class UserPresenter implements UserContract.Presenter {
     }
 
     private void sendUpdatedList() {
-        ArrayList<String> lodgeNames = new ArrayList<>();
-        lodgeNames.addAll(mLodgeList.values());
-        mUserView.updateLodgeList(lodgeNames);
+        mLodgeListPresenter.changeData(mLodges);
+        mUserView.updateLodgeList();
     }
 }

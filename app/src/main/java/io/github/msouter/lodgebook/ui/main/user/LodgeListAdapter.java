@@ -58,6 +58,9 @@ public class LodgeListAdapter extends RecyclerView.Adapter<LodgeListAdapter.Lodg
         void setLodgeCount(String count) { mLodgeCount.setText(count); }
 
         void setLodgePic(String picUrl) {
+            if (picUrl==null || picUrl.equals("")) {
+                return;
+            }
             GlideApp.with(itemView.getContext())
                     .load(picUrl)
                     .placeholder(R.drawable.cottage)
