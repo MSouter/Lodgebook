@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="3dp"
+        card_view:cardCornerRadius="@dimen/cardview_default_radius">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/iv_lodge_pic"
+                android:layout_width="match_parent"
+                android:layout_height="128dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:scaleType="fitXY"
+                android:contentDescription="@null"
+                card_view:srcCompat="@drawable/cottage"
+                tools:ignore="KeyboardInaccessibleWidget" />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                card_view:layout_constraintBottom_toBottomOf="@+id/iv_lodge_pic"
+                card_view:layout_constraintEnd_toEndOf="@+id/iv_lodge_pic"
+                card_view:layout_constraintStart_toStartOf="@+id/iv_lodge_pic"
+                card_view:srcCompat="@color/colorAccent" />
+
+            <TextView
+                android:id="@+id/tv_lodge_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:layout_marginStart="8dp"
+                android:text="Redneck Lodge"
+                card_view:layout_constraintBottom_toBottomOf="@+id/iv_lodge_pic"
+                card_view:layout_constraintStart_toStartOf="@+id/iv_lodge_pic" />
+
+            <TextView
+                android:id="@+id/tv_lodge_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:layout_marginEnd="8dp"
+                android:text="21 Members"
+                card_view:layout_constraintBottom_toBottomOf="@+id/iv_lodge_pic"
+                card_view:layout_constraintEnd_toEndOf="@+id/iv_lodge_pic" />
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.v7.widget.CardView>
+
+
+</LinearLayout>

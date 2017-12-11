@@ -1,6 +1,7 @@
 package io.github.msouter.lodgebook.ui.main.register;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -12,7 +13,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.github.msouter.lodgebook.R;
-import io.github.msouter.lodgebook.ui.main.MainActivity;
 
 
 public class RegisterFragment extends Fragment implements RegisterContract.View {
@@ -36,7 +36,7 @@ public class RegisterFragment extends Fragment implements RegisterContract.View 
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_register, container, false);
@@ -45,24 +45,27 @@ public class RegisterFragment extends Fragment implements RegisterContract.View 
         return view;
     }
 
-    @OnClick(R.id.btn_register)
-    public void register() {
-        presenter.createAccount(etEmail.getText().toString().trim(),
-                etPassword.getText().toString().trim());
-    }
-
     @Override
     public void confirmRegistration() {
-        ((MainActivity)getActivity()).startLogin();
+        //noinspection ConstantConditions
+        getFragmentManager().popBackStackImmediate();
     }
 
     @Override
     public void displayMessage(String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(message)
-                .setTitle(R.string.register_error_title)
-                .setPositiveButton(android.R.string.ok, null);
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        if (getActivity() != null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage(message)
+                    .setTitle(R.string.register_error_title)
+                    .setPositiveButton(android.R.string.ok, null);
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+    }
+
+    @OnClick(R.id.btn_register)
+    public void register() {
+        presenter.createAccount(etEmail.getText().toString().trim(),
+                etPassword.getText().toString().trim());
     }
 }

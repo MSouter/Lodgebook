@@ -11,6 +11,7 @@ import java.util.HashMap;
 public class Lodge {
     private String name;
     private String description;
+    private String photoUrl;
     private HashMap<String, Boolean> members;
 
     // Default Constructor required for calls to DataSnapshot.getValue(Lodge.class)
@@ -26,6 +27,7 @@ public class Lodge {
     public Lodge(String newName, String u) {
         this.name = newName;
         this.description = " "; // Left blank initially
+        this.photoUrl = " ";
         this.members = new HashMap<>();
         this.members.put(u, true);
     }
@@ -36,9 +38,11 @@ public class Lodge {
      */
     public String getName() { return this.name; }
     public String getDescription() { return this.description; }
+    public String getPhotoUrl() { return  this.photoUrl; }
     public HashMap<String, Boolean> getMembers() { return this.members; }
 
     public void setName(String newName) { this.name = newName; }
+    public void setPhotoUrl(String newUrl) { this.photoUrl = newUrl; }
     public void setDescription(String newDescription) { this.description = newDescription; }
 
     /**

@@ -1,7 +1,9 @@
 package io.github.msouter.lodgebook.ui.main.login;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -20,7 +22,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.github.msouter.lodgebook.R;
-import io.github.msouter.lodgebook.ui.main.MainActivity;
 import io.github.msouter.lodgebook.ui.main.register.RegisterFragment;
 
 import static android.content.ContentValues.TAG;
@@ -32,6 +33,11 @@ import static android.content.ContentValues.TAG;
 public class LoginFragment extends Fragment implements LoginContract.View {
     private LoginContract.Presenter presenter;
     private CallbackManager mCallbackManager;
+    private OnLoginSuccessListener mCallbackSuccess;
+
+    public interface OnLoginSuccessListener {
+        void onLoginSuccess();
+    }
 
     @BindView(R.id.et_email) EditText etEmail;
     @BindView(R.id.et_password) EditText etPassword;
@@ -52,7 +58,7 @@ public class LoginFragment extends Fragment implements LoginContract.View {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_login, container, false);
@@ -65,9 +71,36 @@ public class LoginFragment extends Fragment implements LoginContract.View {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         // Pass the activity result back to the Facebook SDK
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            mCallbackSuccess = (OnLoginSuccessListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement OnLoginSuccessListener");
+        }
+    }
+
+    @Override
+    public void confirmLogin() {
+        mCallbackSuccess.onLoginSuccess();
+    }
+
+    @Override
+    public void displayMessage(String message) {
+        if (getActivity() != null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage(message)
+                    .setTitle(R.string.login_error_title)
+                    .setPositiveButton(android.R.string.ok, null);
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
     }
 
     @OnClick(R.id.btn_login)
@@ -76,16 +109,17 @@ public class LoginFragment extends Fragment implements LoginContract.View {
                 etPassword.getText().toString().trim());
     }
 
+    @SuppressWarnings("ConstantConditions")
     @OnClick(R.id.btn_register)
     public void register() {
-        RegisterFragment fragment = new RegisterFragment();
+        RegisterFragment fragment = RegisterFragment.newInstance();
         getFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, fragment)
                 .addToBackStack(null)
                 .commit();
     }
 
-    public void initFacebookButton() {
+    private void initFacebookButton() {
         mCallbackManager = CallbackManager.Factory.create();
         btnFacebook.setReadPermissions("email", "public_profile");
         btnFacebook.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
@@ -105,20 +139,5 @@ public class LoginFragment extends Fragment implements LoginContract.View {
                 Log.d(TAG, "facebook:onError", error);
             }
         });
-    }
-
-    @Override
-    public void confirmLogin() {
-        ((MainActivity)getActivity()).startUser();
-    }
-
-    @Override
-    public void displayMessage(String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(message)
-                .setTitle(R.string.login_error_title)
-                .setPositiveButton(android.R.string.ok, null);
-        AlertDialog dialog = builder.create();
-        dialog.show();
     }
 }

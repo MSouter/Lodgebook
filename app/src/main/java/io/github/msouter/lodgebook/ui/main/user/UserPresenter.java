@@ -37,15 +37,15 @@ public class UserPresenter implements UserContract.Presenter {
     }
 
     @Override
-    public void start() {
-        mUserView.showProgressBar();
+    public void startListeners() {
+        mUserView.toggleProgressBar();
         RemoteDB.getReferenceFor(mUser, Authentication.getFirebaseUser().getUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
                             mUser = dataSnapshot.getValue(User.class);
-                            mUserView.showProgressBar();
+                            mUserView.toggleProgressBar();
                             mUserView.updateUser(mUser.getDisplayName(),
                                     mUser.getEmailAddress(),
                                     mUser.getPhotoUrl());
@@ -94,7 +94,7 @@ public class UserPresenter implements UserContract.Presenter {
     }
 
     @Override
-    public void pause() {
+    public void stopListeners() {
         mListReference.removeEventListener(mListListener);
     }
 
@@ -148,7 +148,7 @@ public class UserPresenter implements UserContract.Presenter {
 
         mUser = new User(name, email, photo);
         RemoteDB.setValue(RemoteDB.getReferenceFor(mUser, firebaseUser.getUid()), mUser);
-        mUserView.showProgressBar();
+        mUserView.toggleProgressBar();
         mUserView.updateUser(mUser.getDisplayName(),
                 mUser.getEmailAddress(),
                 mUser.getPhotoUrl());

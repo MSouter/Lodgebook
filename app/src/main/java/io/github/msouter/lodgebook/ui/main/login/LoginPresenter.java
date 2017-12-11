@@ -18,7 +18,6 @@ import io.github.msouter.lodgebook.network.Authentication;
  */
 
 public class LoginPresenter implements LoginContract.Presenter {
-
     private static final String TAG = LoginFragment.class.getSimpleName();
 
     private final LoginContract.View mLoginView;

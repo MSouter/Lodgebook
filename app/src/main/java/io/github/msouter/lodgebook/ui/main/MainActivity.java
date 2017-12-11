@@ -8,10 +8,16 @@ import android.widget.FrameLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.github.msouter.lodgebook.R;
+import io.github.msouter.lodgebook.ui.lodge.LodgeActivity;
 import io.github.msouter.lodgebook.ui.main.login.LoginFragment;
 import io.github.msouter.lodgebook.ui.main.user.UserFragment;
 
-public class MainActivity extends AppCompatActivity implements MainContract.View {
+/**
+ * MainActivity View
+ * Serves fragments for Login or User View depending on Auth status
+ */
+public class MainActivity extends AppCompatActivity implements MainContract.View,
+        LoginFragment.OnLoginSuccessListener, UserFragment.UserActionListener {
     private MainContract.Presenter presenter;
 
     @BindView(R.id.fragment_container) FrameLayout fragmentContainer;
@@ -25,6 +31,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         presenter = new MainPresenter(this);
     }
 
+    /**
+     * onActivityResult required for Facebook Login
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -34,22 +43,39 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     @Override
-    public void onStart() {
+    protected void onStart() {
         super.onStart();
         presenter.start();
     }
 
     @Override
     public void startLogin() {
-        LoginFragment fragment = new LoginFragment();
+        LoginFragment fragment = LoginFragment.newInstance();
         getSupportFragmentManager().beginTransaction()
                 .replace(fragmentContainer.getId(), fragment).commit();
     }
 
     @Override
     public void startUser() {
-        UserFragment fragment = new UserFragment();
+        UserFragment fragment = UserFragment.newInstance();
         getSupportFragmentManager().beginTransaction()
                 .replace(fragmentContainer.getId(), fragment).commit();
+    }
+
+    @Override
+    public void onLoginSuccess() {
+        startUser();
+    }
+
+    @Override
+    public void onSignOut() {
+        startLogin();
+    }
+
+    @Override
+    public void onLodgeSelect(String lodgeId) {
+        Intent intent = new Intent(this, LodgeActivity.class);
+        intent.putExtra("lodgeId", lodgeId);
+        startActivity(intent);
     }
 }

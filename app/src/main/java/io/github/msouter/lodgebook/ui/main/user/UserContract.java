@@ -15,13 +15,13 @@ public interface UserContract {
 
         void viewLodge(String lodgeId);
 
-        void showProgressBar();
+        void toggleProgressBar();
     }
 
     interface Presenter {
-        void start();
+        void startListeners();
 
-        void pause();
+        void stopListeners();
 
         void addLodge(String lodgeName);
 
